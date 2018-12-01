@@ -2,10 +2,13 @@
   "name": "client",
   "version": "0.0.1",
   "description": "A simple html5 multi-user game",
-  "main": "index.js",
+  "private": true,
   "author": "Ethan Pailes & Abdisalan Mohamud",
   "license": "MIT",
   "dependencies": {
-    "matter-js": "^0.14.2"
+    "@saltyrtc/client": "^0.13.2",
+    "matter-js": "^0.14.2",
+    "msgpack-lite": "^0.1.26",
+    "tweetnacl": "^1.0.0"
   }
 }

@@ -1,20 +1,21 @@
-// module aliases
-let Engine = Matter.Engine,
-    Render = Matter.Render,
-    World = Matter.World,
-    Bounds = Matter.Bounds,
-    Bodies = Matter.Bodies;
-    Body = Matter.Body;
-    Mouse = Matter.Mouse;
-    Events = Matter.Events;
-    Vector = Matter.Vector;
-    MouseConstraint = Matter.MouseConstraint;
+import {
+    Bodies,
+    Body,
+    Bounds,
+    Engine,
+    Events,
+    Mouse,
+    MouseConstraint,
+    Render,
+    Vector,
+    World,
+} from 'matter-js';
 
-const AVATAR_RADIUS = 20;
-const AVATAR_MASS = 50;
-const AVATAR_FORCE = 1;
-const AVATAR_STOP_SPEED = 5;
 const AVATAR_AIR_FRICTION = 0.1;
+const AVATAR_FORCE = 1;
+const AVATAR_MASS = 50;
+const AVATAR_RADIUS = 20;
+const AVATAR_STOP_SPEED = 5;
 
 // create an engine
 let engine = Engine.create();
@@ -41,6 +42,9 @@ let mouse = Mouse.create(render.canvas);
 render.mouse = mouse;
 
 /**
+ * Accelerate `body` towards `point`, stopping at the point if
+ * `point` is within `body` and `body` is going sufficiently slowly.
+ *
  * @param body - The body to update the force on
  * @param point - The point to accelerate towards
  * @param mag - The magnitude of the force to apply
