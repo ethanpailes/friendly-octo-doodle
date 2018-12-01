@@ -3,13 +3,12 @@
 extern crate actix;
 extern crate actix_web;
 extern crate env_logger;
+extern crate ws;
 
 use actix_web::http::{header, Method, StatusCode};
-use actix_web::{
-    fs, middleware, pred, server, App, HttpRequest, HttpResponse,
-    Result,
-};
-use std::{env};
+use actix_web::{fs, middleware, pred, server, App, HttpRequest, HttpResponse, Result};
+use std::env;
+use ws::listen;
 
 /// favicon handler
 fn favicon(req: &HttpRequest) -> Result<fs::NamedFile> {
@@ -27,8 +26,8 @@ fn main() {
     env_logger::init();
     let sys = actix::System::new("basic-example");
 
-    let addr = server::new(
-        || App::new()
+    let addr = server::new(|| {
+        App::new()
             // enable logger
             .middleware(middleware::Logger::default())
             // register favicon
@@ -36,25 +35,32 @@ fn main() {
             // static files
             .handler("/static", fs::StaticFiles::new("../client/static").unwrap())
             // redirect
-            .resource("/", |r| r.method(Method::GET).f(|req| {
-                println!("{:?}", req);
-                HttpResponse::Found()
-                    .header(header::LOCATION, "static/index.html")
-                    .finish()
-            }))
+            .resource("/", |r| {
+                r.method(Method::GET).f(|req| {
+                    println!("{:?}", req);
+                    HttpResponse::Found()
+                        .header(header::LOCATION, "static/index.html")
+                        .finish()
+                })
+            })
             // default
             .default_resource(|r| {
                 // 404 for GET request
                 r.method(Method::GET).f(p404);
 
                 // all requests that are not `GET`
-                r.route().filter(pred::Not(pred::Get())).f(
-                    |req| HttpResponse::MethodNotAllowed());
-            }))
+                r.route()
+                    .filter(pred::Not(pred::Get()))
+                    .f(|req| HttpResponse::MethodNotAllowed());
+            })
+    }).bind("127.0.0.1:8080")
+    .expect("Can not bind to 127.0.0.1:8080")
+    .shutdown_timeout(0) // <- Set shutdown timeout to 0 seconds (default 60s)
+    .start();
 
-        .bind("127.0.0.1:8080").expect("Can not bind to 127.0.0.1:8080")
-        .shutdown_timeout(0)    // <- Set shutdown timeout to 0 seconds (default 60s)
-        .start();
+    // web socket echo server
+    println!("Starting web socket server: 127.0.0.1:3012");
+    listen("127.0.0.1:3012", |out| move |msg| out.send(msg));
 
     println!("Starting http server: 127.0.0.1:8080");
     let _ = sys.run();
