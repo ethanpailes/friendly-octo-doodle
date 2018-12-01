@@ -10,6 +10,11 @@ use actix_web::{fs, middleware, pred, server, App, HttpRequest, HttpResponse, Re
 use std::env;
 use ws::listen;
 
+// index handler
+fn index(req: &HttpRequest) -> Result<fs::NamedFile> {
+    Ok(fs::NamedFile::open("../client/dist/index.html")?)
+}
+
 /// favicon handler
 fn favicon(req: &HttpRequest) -> Result<fs::NamedFile> {
     Ok(fs::NamedFile::open("../client/favicon.ico")?)
@@ -33,16 +38,9 @@ fn main() {
             // register favicon
             .resource("/favicon", |r| r.f(favicon))
             // static files
-            .handler("/static", fs::StaticFiles::new("../client/static").unwrap())
-            // redirect
-            .resource("/", |r| {
-                r.method(Method::GET).f(|req| {
-                    println!("{:?}", req);
-                    HttpResponse::Found()
-                        .header(header::LOCATION, "static/index.html")
-                        .finish()
-                })
-            })
+            .handler("/dist", fs::StaticFiles::new("../client/dist").unwrap())
+            // home
+            .resource("/", |r| r.f(index))
             // default
             .default_resource(|r| {
                 // 404 for GET request
