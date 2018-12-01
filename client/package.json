@@ -1,0 +1,11 @@
+{
+  "name": "client",
+  "version": "0.0.1",
+  "description": "A simple html5 multi-user game",
+  "main": "index.js",
+  "author": "Ethan Pailes & Abdisalan Mohamud",
+  "license": "MIT",
+  "dependencies": {
+    "matter-js": "^0.14.2"
+  }
+}
