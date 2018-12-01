@@ -5,3 +5,5 @@ authors = ["Abdisalan Mohamud <abdi.mohamud94@gmail.com>"]
 
 [dependencies]
 actix-web = "0.7.14"
+actix = "0.7"
+env_logger = "0.6"
