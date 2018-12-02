@@ -5,7 +5,9 @@ extern crate actix_web;
 extern crate env_logger;
 
 use actix_web::http::{Method, StatusCode};
-use actix_web::{fs, middleware, pred, server, App, HttpRequest, HttpResponse, Result};
+use actix_web::{
+    fs, middleware, pred, server, App, HttpRequest, HttpResponse, Path, Responder, Result,
+};
 use std::env;
 
 // index handler
@@ -14,8 +16,13 @@ fn index(req: &HttpRequest) -> Result<fs::NamedFile> {
 }
 
 // eat food handler
-fn eat_food(req: &HttpRequest) -> Result<HttpResponse> {
-    println!("ate food");
+fn eat_food(info: Path<(String, u32)>) -> impl Responder {
+    format!("Player {} ate food with id:{}", info.0, info.1)
+}
+
+// new food handler
+fn new_food(req: &HttpRequest) -> Result<HttpResponse> {
+    println!("new food is available/not");
     Ok(HttpResponse::Ok().into())
 }
 
@@ -34,6 +41,7 @@ fn main() {
     env::set_var("RUST_BACKTRACE", "1");
     env_logger::init();
     let sys = actix::System::new("basic-example");
+    let food_id = "1234567890";
 
     let addr = server::new(|| {
         App::new()
@@ -45,8 +53,9 @@ fn main() {
             .handler("/dist", fs::StaticFiles::new("../client/dist").unwrap())
             // home
             .resource("/", |r| r.f(index))
-            // path test
-            .resource("/kek", |r| r.get().f(eat_food))
+            // eating and giving food
+            .resource("/eat/{player_id}/{food_id}", |r| r.with(eat_food))
+            .resource("/new_food", |r| r.get().f(new_food))
             // default
             .default_resource(|r| {
                 // 404 for GET request
