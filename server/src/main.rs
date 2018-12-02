@@ -3,16 +3,20 @@
 extern crate actix;
 extern crate actix_web;
 extern crate env_logger;
-extern crate ws;
 
-use actix_web::http::{header, Method, StatusCode};
+use actix_web::http::{Method, StatusCode};
 use actix_web::{fs, middleware, pred, server, App, HttpRequest, HttpResponse, Result};
 use std::env;
-use ws::listen;
 
 // index handler
 fn index(req: &HttpRequest) -> Result<fs::NamedFile> {
     Ok(fs::NamedFile::open("../client/dist/index.html")?)
+}
+
+// eat food handler
+fn eat_food(req: &HttpRequest) -> Result<HttpResponse> {
+    println!("ate food");
+    Ok(HttpResponse::Ok().into())
 }
 
 /// favicon handler
@@ -41,6 +45,8 @@ fn main() {
             .handler("/dist", fs::StaticFiles::new("../client/dist").unwrap())
             // home
             .resource("/", |r| r.f(index))
+            // path test
+            .resource("/kek", |r| r.get().f(eat_food))
             // default
             .default_resource(|r| {
                 // 404 for GET request
@@ -55,10 +61,6 @@ fn main() {
     .expect("Can not bind to 127.0.0.1:8080")
     .shutdown_timeout(0) // <- Set shutdown timeout to 0 seconds (default 60s)
     .start();
-
-    // web socket echo server
-    println!("Starting web socket server: 127.0.0.1:3012");
-    listen("127.0.0.1:3012", |out| move |msg| out.send(msg));
 
     println!("Starting http server: 127.0.0.1:8080");
     let _ = sys.run();
