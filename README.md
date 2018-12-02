@@ -6,3 +6,6 @@ A simple multi-user html5 game.
 
 The client lives in the `client` subdirector. That directory is the top
 level of a yarn project with client-related configs.
+
+## Server
+In the server folder is a rust server.
