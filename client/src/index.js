@@ -1,3 +1,5 @@
+"use strict";
+
 import {
     Bodies,
     Body,
@@ -10,6 +12,8 @@ import {
     Vector,
     World,
 } from 'matter-js';
+
+import * as LeaderBoard from './leaderboard';
 
 const AVATAR_AIR_FRICTION = 0.1;
 const AVATAR_FORCE = 1;
@@ -92,3 +96,6 @@ Engine.run(engine);
 
 // run the renderer
 Render.run(render);
+
+// Register callbacks for the non-game part of the UI
+LeaderBoard.registerHooks();

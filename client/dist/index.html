@@ -4,12 +4,42 @@
 
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="dist/index.css">
 </head>
 
 <body>
-    <div id="matter-frame">
+    <div id="top-level-container">
+        <div id="matter-frame">
+        </div>
+
+        <div id="leaderboard-container">
+            <h2 id="leaderboard-title">Leader Board</h2>
+            <table id="leaderboard">
+                <thead>
+                    <tr>
+                        <th id="user-col">User</th>
+                        <th id="score-col">Max Food Eaten</th>
+                        <th id="food-per-sec-col">Average Food Per Min</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- TODO(ethan): delete this test data -->
+                    <tr>
+                        <td>A User</td>
+                        <td>56</td>
+                        <td>113.255</td>
+                    </tr>
+                    <tr>
+                        <td>Another User</td>
+                        <td>54</td>
+                        <td>213.255</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
+
 <script src="dist/main.js"></script>
 
 </html>
