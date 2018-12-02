@@ -6,10 +6,7 @@
   "author": "Ethan Pailes & Abdisalan Mohamud",
   "license": "MIT",
   "dependencies": {
-    "@saltyrtc/client": "^0.13.2",
-    "matter-js": "^0.14.2",
-    "msgpack-lite": "^0.1.26",
-    "tweetnacl": "^1.0.0"
+    "matter-js": "^0.14.2"
   },
   "devDependencies": {
     "webpack": "^4.26.1"
